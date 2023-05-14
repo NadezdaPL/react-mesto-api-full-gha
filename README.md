@@ -6,9 +6,9 @@
 
 ## Ссылки на проект
 
-IP-адрес: 130.193.48.152
-Frontend: https://project-mesto.nomoredomains.monster
-Backend: https://api.project-mesto.nomoredomains.monster
+IP-адрес 130.193.48.152
+Frontend https://project-mesto.nomoredomains.monster
+Backend https://api.project-mesto.nomoredomains.monster
 
 ## Технологии проекта
 

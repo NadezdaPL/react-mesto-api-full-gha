@@ -3,7 +3,7 @@ const allowedCors = [
   'http://project-mesto.nomoredomains.monster',
   'localhost:3000',
   'https://130.193.48.152',
-  'http://130.193.48.152'
+  'http://130.193.48.152',
 ];
 
 module.exports = (req, res, next) => {
