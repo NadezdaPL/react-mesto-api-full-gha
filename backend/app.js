@@ -4,12 +4,14 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const errorCelebrate = require('celebrate').errors;
 const path = require('path');
+const helmet = require('helmet');
 const router = require('./routes/index');
 const { ERROR_INTERNAL_SERVER } = require('./utils/constants');
 const errHandlers = require('./utils/handlers');
 const { PORT, MONGODB } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
+const limiter = require('./middlewares/rateLimit');
 
 const app = express();
 mongoose.connect(MONGODB);
@@ -23,6 +25,8 @@ app.get('/crash-test', () => {
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors);
+app.use(helmet());
+app.use(limiter);
 app.use(requestLogger);
 app.use('/', router);
 app.use(errorLogger);
