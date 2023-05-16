@@ -13,6 +13,7 @@ function makeRequest(url, method, body, token) {
   const config = {
     method,
     headers,
+    credentials: 'include'
   };
 
   if (body !== undefined) {
