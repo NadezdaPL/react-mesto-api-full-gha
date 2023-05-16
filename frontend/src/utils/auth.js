@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
+export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
 
 function makeRequest(url, method, body, token) {
   const headers = {

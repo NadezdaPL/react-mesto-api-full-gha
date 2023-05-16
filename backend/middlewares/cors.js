@@ -2,6 +2,7 @@ const allowedCors = [
   'https://project-mesto.nomoredomains.monster',
   'http://project-mesto.nomoredomains.monster',
   'localhost:3000',
+  'localhost:3001',
   'https://130.193.48.152',
   'http://130.193.48.152',
 ];

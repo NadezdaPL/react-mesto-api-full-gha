@@ -1,3 +1,5 @@
+import { BASE_URL } from "./auth";
+
 class Api {
   constructor(options) {
     this._options = options;
@@ -83,7 +85,7 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: "https://api.project-mesto.nomoredomains.monster",
+  baseUrl: BASE_URL,
   headers: {
     "Accept": "application/json",
     "Content-Type": "application/json",
