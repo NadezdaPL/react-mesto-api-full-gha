@@ -1,5 +1,5 @@
 {
-  "name": "react-mesto-auth",
+  "name": "react-mesto-api-full-gha",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -50,7 +50,7 @@
     "url": "git+ssh://git@github.com/NadezdaPL/react-mesto-api-full-gha.git"
   },
   "bugs": {
-    "url": "https://github.com/NadezdaPL/react-mesto-api-full-gha/issues"
+    "url": "https://project-mesto.nomoredomains.monster/issues"
   },
-  "homepage": "https://nadezdapl.github.io/react-mesto-api-full-gha/"
+  "homepage": "https://project-mesto.nomoredomains.monster/"
 }
