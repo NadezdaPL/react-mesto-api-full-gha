@@ -10,7 +10,7 @@ const { ERROR_INTERNAL_SERVER } = require('./utils/constants');
 const errHandlers = require('./utils/handlers');
 const { PORT, MONGODB } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const cors = require('./middlewares/cors');
+const cors = require('./middlewares/cors');
 const limiter = require('./middlewares/rateLimit');
 
 const app = express();
@@ -24,7 +24,7 @@ app.get('/crash-test', () => {
 
 app.use(cookieParser());
 app.use(express.json());
-// app.use(cors);
+app.use(cors);
 app.use(helmet());
 app.use(limiter);
 app.use(requestLogger);
