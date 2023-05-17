@@ -2,8 +2,8 @@ export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
 
 function makeRequest(url, method, body, token) {
   const headers = {
-    Accept: "application/json",
     "Content-Type": "application/json",
+    authorization: `Bearer ${token}`,
   };
 
   if (token !== undefined) {
