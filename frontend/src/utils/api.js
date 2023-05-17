@@ -11,103 +11,107 @@ class Api {
     if (response.ok) {
       return response.json();
     }
-      return response.ok 
-      ? response.json()
-      : Promise.reject( new Error(`Error: ${response.status} ${response.statusText}`));
+      return Promise.reject(response);
     }
   
-  getInfo() {
-    return fetch(`${this._baseUrl}/users/me`, {
-      credentials: "include",
-      headers: this._headers,
-    }).then((response) => this._checkResponse(response))
+  _request(url, options) {
+    return fetch(url, options).then(this._checkResponse)
   }
   
-  getInitialCards(token) {
-    return fetch(`${this._baseUrl}/cards`, {
+  getInfo(jwt) {
+    return this._request(`${BASE_URL}/users/me`, {
       headers: {
+        "Authorization": `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
-    }).then((response) => this._checkResponse(response))
+    });
   }
   
-  addInfo(data, token) {
-    return fetch(`${this._baseUrl}/users/me`, {
+  getInitialCards(jwt) {
+    return this._request(`${BASE_URL}/cards`, {
       headers: {
+        "Authorization": `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+      },
+    });
+  }
+  
+  addInfo(data, jwt) {
+    return this._request(`${BASE_URL}/users/me`, {
+      headers: {
+        "Authorization": `Bearer ${jwt}`,
+        "Content-Type": "application/json",
       },
       method: "PATCH",
       body: JSON.stringify({
         name: `${data.name}`,
         about: `${data.about}`,
       }),
-    }).then((response) => this._checkResponse(response))
+    });
   }
   
-  createCard(data, token) {
-    return fetch(`${this._baseUrl}/cards`, {
+  createCard(data, jwt) {
+    return this._request(`${BASE_URL}/cards`, {
       headers: {
+        "Authorization": `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
       method: "POST",
       body: JSON.stringify({
         name: data.title,
         link: data.link,
       }),
-    }).then((response) => this._checkResponse(response))
+    });
   }
   
-  changeLikeCardStatus(id, isLiked, token) {
+  changeLikeCardStatus(id, isLiked, jwt) {
     if (isLiked) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+      return this._request(`${BASE_URL}/cards/${id}/likes`, {
         headers: {
+          "Authorization": `Bearer ${jwt}`,
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
           method: "PUT",
       });
     } else {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+      return this._request(`${BASE_URL}/cards/${id}/likes`, {
         headers: {
+          "Authorization": `Bearer ${jwt}`,
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
         method: "DELETE",
-      }).then((response) => this._checkResponse(response))
+      });
     }
   }
   
-  deleteCard(id, token) {
-    return fetch(`${this._baseUrl}/cards/${id}`, {
+  deleteCard(id, jwt) {
+    return this._request(`${BASE_URL}/cards/${id}`, {
       headers: {
+        "Authorization": `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
       method: "DELETE",
-    }).then((response) => this._checkResponse(response))
+    });
   }
   
-  addAvatar(data, token) {
-    return fetch(`${this._baseUrl}/users/me/avatar`, {
+  addAvatar(data, jwt) {
+    return this._request(`${BASE_URL}/users/me/avatar`, {
       headers: {
+        "Authorization": `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
       method: "PATCH",
       body: JSON.stringify({
         avatar: data.avatar,
       }),
-    }).then((response) => this._checkResponse(response))
+    });
   }
 }
 
 export const api = new Api({
-  baseUrl: BASE_URL,
+  baseUrl: "https://localhost:3000",
   headers: {
+    "Authorization": `Bearer ${localStorage.getItem('jwt')}`,
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${localStorage.getItem('token')}`
   },
 });
