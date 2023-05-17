@@ -11,83 +11,103 @@ class Api {
     if (response.ok) {
       return response.json();
     }
-      return Promise.reject(response);
+      return response.ok 
+      ? response.json()
+      : Promise.reject( new Error(`Error: ${response.status} ${response.statusText}`));
     }
   
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse)
-  }
-  
   getInfo() {
-    return this._request(`${this._baseUrl}/users/me`, {
+    return fetch(`${this._baseUrl}/users/me`, {
+      credentials: "include",
       headers: this._headers,
-    });
+    }).then((response) => this._checkResponse(response))
   }
   
-  getInitialCards() {
-    return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
-    });
+  getInitialCards(token) {
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    }).then((response) => this._checkResponse(response))
   }
   
-  addInfo(data) {
-    return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+  addInfo(data, token) {
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       method: "PATCH",
       body: JSON.stringify({
         name: `${data.name}`,
         about: `${data.about}`,
       }),
-    });
+    }).then((response) => this._checkResponse(response))
   }
   
-  createCard(data) {
-    return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+  createCard(data, token) {
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       method: "POST",
       body: JSON.stringify({
         name: data.title,
         link: data.link,
       }),
-    });
+    }).then((response) => this._checkResponse(response))
   }
   
-  changeLikeCardStatus(id, isLiked) {
+  changeLikeCardStatus(id, isLiked, token) {
     if (isLiked) {
-      return this._request(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._headers,
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
           method: "PUT",
       });
     } else {
-      return this._request(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._headers,
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         method: "DELETE",
-      });
+      }).then((response) => this._checkResponse(response))
     }
   }
   
-  deleteCard(id) {
-    return this._request(`${this._baseUrl}/cards/${id}`, {
-      headers: this._headers,
+  deleteCard(id, token) {
+    return fetch(`${this._baseUrl}/cards/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       method: "DELETE",
-    });
+    }).then((response) => this._checkResponse(response))
   }
   
-  addAvatar(data) {
-    return this._request(`${this._baseUrl}/users/me/avatar`, {
-      headers: this._headers,
+  addAvatar(data, token) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       method: "PATCH",
       body: JSON.stringify({
         avatar: data.avatar,
       }),
-    });
+    }).then((response) => this._checkResponse(response))
   }
 }
 
 export const api = new Api({
   baseUrl: BASE_URL,
   headers: {
-    "Accept": "application/json",
     "Content-Type": "application/json",
+    "Authorization": `Bearer ${localStorage.getItem('token')}`
   },
 });
