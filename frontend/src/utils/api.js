@@ -1,4 +1,4 @@
-import { BASE_URL } from "./auth";
+import { BASE_URL, makeRequest } from "./auth";
 
 class Api {
   constructor(options) {
@@ -11,80 +11,43 @@ class Api {
     if (response.ok) {
       return response.json();
     }
-    return Promise.reject(response);
+      return Promise.reject(response);
+    }
+  
+  _request(url, options) {
+    return fetch(url, options).then(this._checkResponse)
   }
   
- _getHeaders() {
-    this._token = localStorage.getItem('token');
-    this._headers.authorization = `Bearer ${this._token}`
-    return this._headers;
- }
-  
   getInfo() {
-    return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._getHeaders(),
-      method: "GET",
-    }).then(this._checkResponse)
+    return makeRequest("/users/me", "GET");
   }
   
   getInitialCards() {
-    return fetch(`${this._baseUrl}/cards`, {
-      headers: this._getHeaders(),
-      method: "GET",
-    }).then(this._checkResponse)
+    return makeRequest("/cards", "GET");
   }
   
-  addInfo(data) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._getHeaders(),
-      method: "PATCH",
-      body: JSON.stringify({
-        name: `${data.name}`,
-        about: `${data.about}`,
-      }),
-    }).then(this._checkResponse)
+  addInfo({ name, about }) {
+    return makeRequest("/users/me", "PATCH", { name, about });
   }
   
-  createCard(data) {
-    return fetch(`${this._baseUrl}/cards`, {
-      headers: this._getHeaders(),
-      method: "POST",
-      body: JSON.stringify({
-        name: data.title,
-        link: data.link,
-      }),
-    }).then(this._checkResponse)
+  createCard({ name, link }) {
+    return makeRequest("/cards", "POST", { name, link });
   }
   
   changeLikeCardStatus(id, isLiked) {
     if (isLiked) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._getHeaders(),
-          method: "PUT",
-      }).then(this._checkResponse)
+      return makeRequest(`/cards/${id}/likes`, "PUT");
     } else {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._getHeaders(),
-        method: "DELETE",
-      }).then(this._checkResponse)
+      return makeRequest(`/cards/${id}/likes`, "DELETE");
     }
   }
   
   deleteCard(id) {
-    return fetch(`${this._baseUrl}/cards/${id}`, {
-      headers: this._getHeaders(),
-      method: "DELETE",
-    }).then(this._checkResponse)
+    return makeRequest(`/cards/${id}`, "DELETE");
   }
   
-  addAvatar(data) {
-    return fetch(`${this._baseUrl}/users/me/avatar`, {
-      headers: this._getHeaders(),
-      method: "PATCH",
-      body: JSON.stringify({
-        avatar: data.avatar,
-      }),
-    }).then(this._checkResponse)
+  addAvatar({ avatar }) {
+    return makeRequest("/users/me/avatar", "PATCH", { avatar });
   }
 }
 

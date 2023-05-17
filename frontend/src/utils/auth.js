@@ -1,46 +1,36 @@
 export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
 
-export function register(email, password) {
-  return fetch(`${BASE_URL}/signup`, {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password })
-  })
-  .then((response => response.ok || response.status === 400
-    ? response.json()
-    : Promise.reject(`Error: ${response.status} ${response.statusText}`)
-  ))
+export const makeRequest = (url, method, body) => {
+  const headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+  };
+
+  const config = {
+    method,
+    headers,
+    credentials: "include",
+  };
+
+  if (body !== undefined) {
+    config.body = JSON.stringify(body);
+  }
+
+  return fetch(`${BASE_URL}${url}`, config).then((response) => {
+    return response.ok
+      ? response.json()
+      : Promise.reject(`Error: ${response.status} ${response.statusText}`);
+  });
 }
 
-export function authorize(email, password) {
-  return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password })
-  })
-  .then((response => response.ok || response.status === 401
-    ? response.json()
-    : Promise.reject(`Error: ${response.status} ${response.statusText}`)
-  ))
+export function register({ email, password }) {
+  return makeRequest("/signup", "POST", { email, password });
 }
 
-export const checkToken = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-  })
-  .then((response => response.ok
-    ? response.json()
-    : Promise.reject(`Error: ${response.status} ${response.statusText}`)
-  ))
-  .then((data) => data)
+export function authorize({ email, password }) {
+  return makeRequest("/signin", "POST", { email, password });
+}
+
+export function checkToken(token) {
+  return makeRequest("/users/me", "GET", undefined, token);
 }
