@@ -1,14 +1,9 @@
 export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
 
-function makeRequest(url, method, body, token) {
+function makeRequest(url, method, body) {
   const headers = {
-    "Content-Type": "application/json",
-    authorization: `Bearer ${token}`,
+    "Content-Type": "application/json"
   };
-
-  if (token !== undefined) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
 
   const config = {
     method,
