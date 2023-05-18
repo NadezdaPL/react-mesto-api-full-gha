@@ -99,7 +99,7 @@ module.exports.login = (req, res) => {
         .cookie('token', token, {
           maxAge: 3600000,
           httpOnly: true,
-          sameSite: true,
+          // sameSite: true,
         })
         .send({ token });
     })
