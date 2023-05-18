@@ -21,12 +21,14 @@ class Api {
   getInfo() {
     return this._request(`${this._baseUrl}/users/me`, {
       headers: this._headers,
+      credentials: "include",
     });
   }
   
   getInitialCards() {
     return this._request(`${this._baseUrl}/cards`, {
       headers: this._headers,
+      credentials: "include",
     });
   }
   
@@ -34,6 +36,7 @@ class Api {
     return this._request(`${this._baseUrl}/users/me`, {
       headers: this._headers,
       method: "PATCH",
+      credentials: "include",
       body: JSON.stringify({
         name: `${data.name}`,
         about: `${data.about}`,
@@ -45,6 +48,7 @@ class Api {
     return this._request(`${this._baseUrl}/cards`, {
       headers: this._headers,
       method: "POST",
+      credentials: "include",
       body: JSON.stringify({
         name: data.title,
         link: data.link,
@@ -56,12 +60,14 @@ class Api {
     if (isLiked) {
       return this._request(`${this._baseUrl}/cards/${id}/likes`, {
         headers: this._headers,
-          method: "PUT",
+        method: "PUT",
+        credentials: "include",
       });
     } else {
       return this._request(`${this._baseUrl}/cards/${id}/likes`, {
         headers: this._headers,
         method: "DELETE",
+        credentials: "include",
       });
     }
   }
@@ -70,6 +76,7 @@ class Api {
     return this._request(`${this._baseUrl}/cards/${id}`, {
       headers: this._headers,
       method: "DELETE",
+      credentials: "include",
     });
   }
   
@@ -77,14 +84,11 @@ class Api {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
       headers: this._headers,
       method: "PATCH",
+      credentials: "include",
       body: JSON.stringify({
         avatar: data.avatar,
       }),
     });
-  }
-
-  getToken() {
-    return this._headers.authorization = `Bearer ${localStorage.getItem('token')}`
   }
 }
 
@@ -92,5 +96,6 @@ export const api = new Api({
   baseUrl: BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem('jwt')}`
   },
 });

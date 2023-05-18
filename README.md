@@ -1,4 +1,5 @@
-[![Tests](https://github.com/yandex-praktikum/react-mesto-api-full-gha/actions/workflows/tests.yml/badge.svg)](https://github.com/yandex-praktikum/react-mesto-api-full-gha/actions/workflows/tests.yml)
+[![Tests](https://github.com/nadezdapl/react-mesto-api-full-gha/actions/workflows/tests.yml/badge.svg)](https://github.com/nadezdapl/react-mesto-api-full-gha/actions/workflows/tests.yml)
+
 ## Проект МЕСТО (frontend и backend)
 Проект `Mesto`, включающий фронтенд и бэкенд части приложения со следующими возможностями: авторизации и регистрации пользователей, операции с карточками и пользователями. Бэкенд расположен в директории `backend/`, а фронтенд - в `frontend/`. 
 

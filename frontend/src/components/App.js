@@ -52,22 +52,6 @@ function App() {
         });
   }, [loggedIn]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      auth
-        .checkToken(token)
-        .then((data) => {
-          setLoggedIn(true);
-          setEmail({ email: data.email });
-          navigate("/");
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }
-  }, [navigate])
-
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
   };
