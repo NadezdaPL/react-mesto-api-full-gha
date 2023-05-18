@@ -1,15 +1,18 @@
 export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
 
-export const makeRequest = (url, method, body) => {
+function makeRequest(url, method, body, token) {
   const headers = {
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
   };
+
+  if (token !== undefined) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
   const config = {
     method,
     headers,
-    credentials: "include",
   };
 
   if (body !== undefined) {
@@ -23,14 +26,20 @@ export const makeRequest = (url, method, body) => {
   });
 }
 
-export function register({ email, password }) {
+export function register(email, password) {
   return makeRequest("/signup", "POST", { email, password });
 }
 
-export function authorize({ email, password }) {
+export function authorize(email, password) {
   return makeRequest("/signin", "POST", { email, password });
 }
 
-export function checkToken(token) {
-  return makeRequest("/users/me", "GET", undefined, token);
+export const checkToken = (token) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    }
+  });
 }

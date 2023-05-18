@@ -1,6 +1,6 @@
-import { BASE_URL, makeRequest } from "./auth";
+import { BASE_URL } from "./auth";
 
-class Api {
+export default class Api {
   constructor(options) {
     this._options = options;
     this._baseUrl = this._options.baseUrl;
@@ -19,35 +19,74 @@ class Api {
   }
   
   getInfo() {
-    return makeRequest("/users/me", "GET");
+    return this._request(`${this._baseUrl}/users/me`, {
+      headers: this._headers,
+    });
+  }
+
+  _setHeaders() {
+    this._token = localStorage.getItem("token");
+    this._headers.authorization = `Bearer ${this._token}`;
+    return this._headers;
   }
   
   getInitialCards() {
-    return makeRequest("/cards", "GET");
+    return this._request(`${this._baseUrl}/cards`, {
+      headers: this._headers,
+    });
   }
   
-  addInfo({ name, about }) {
-    return makeRequest("/users/me", "PATCH", { name, about });
+  addInfo(data) {
+    return this._request(`${this._baseUrl}/users/me`, {
+      headers: this._setHeaders(),
+      method: "PATCH",
+      body: JSON.stringify({
+        name: `${data.name}`,
+        about: `${data.about}`,
+      }),
+    });
   }
   
-  createCard({ name, link }) {
-    return makeRequest("/cards", "POST", { name, link });
+  createCard(data) {
+    return this._request(`${this._baseUrl}/cards`, {
+      headers: this._setHeaders(),
+      method: "POST",
+      body: JSON.stringify({
+        name: data.title,
+        link: data.link,
+      }),
+    });
   }
   
   changeLikeCardStatus(id, isLiked) {
     if (isLiked) {
-      return makeRequest(`/cards/${id}/likes`, "PUT");
+      return this._request(`${this._baseUrl}/cards/${id}/likes`, {
+        headers: this._setHeaders(),
+          method: "PUT",
+      });
     } else {
-      return makeRequest(`/cards/${id}/likes`, "DELETE");
+      return this._request(`${this._baseUrl}/cards/${id}/likes`, {
+        headers: this._setHeaders(),
+        method: "DELETE",
+      });
     }
   }
   
   deleteCard(id) {
-    return makeRequest(`/cards/${id}`, "DELETE");
+    return this._request(`${this._baseUrl}/cards/${id}`, {
+      headers: this._setHeaders(),
+      method: "DELETE",
+    });
   }
   
-  addAvatar({ avatar }) {
-    return makeRequest("/users/me/avatar", "PATCH", { avatar });
+  addAvatar(data) {
+    return this._request(`${this._baseUrl}/users/me/avatar`, {
+      headers: this._setHeaders(),
+      method: "PATCH",
+      body: JSON.stringify({
+        avatar: data.avatar,
+      }),
+    });
   }
 }
 
@@ -55,6 +94,6 @@ export const api = new Api({
   baseUrl: BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json"
-  },
+    "Accept": "application/json",
+  }
 });

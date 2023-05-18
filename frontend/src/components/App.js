@@ -52,6 +52,25 @@ function App() {
         });
   }, [loggedIn]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token && !loggedIn) {
+      setIsCardsLoading(true)
+      auth
+        .checkToken(token)
+        .then((data) => {
+          setEmail(data.email);
+          setLoggedIn(true);
+          navigate("/", { replace: true });
+          setIsCardsLoading(false);
+        })
+        .catch(error => {
+          console.log(error)
+          setIsCardsLoading(false)
+        })
+    }
+  }, [loggedIn])
+
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
   };
