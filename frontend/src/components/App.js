@@ -54,22 +54,19 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token && !loggedIn) {
-      setIsCardsLoading(true)
+    if (token) {
       auth
         .checkToken(token)
         .then((data) => {
-          setEmail(data.email);
           setLoggedIn(true);
-          navigate("/", { replace: true });
-          setIsCardsLoading(false);
+          setEmail({ email: data.email });
+          navigate("/");
         })
         .catch(error => {
           console.log(error)
-          setIsCardsLoading(false)
         })
     }
-  }, [loggedIn])
+  }, [navigate])
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);

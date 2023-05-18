@@ -1,6 +1,6 @@
 import { BASE_URL } from "./auth";
 
-export default class Api {
+class Api {
   constructor(options) {
     this._options = options;
     this._baseUrl = this._options.baseUrl;
@@ -23,12 +23,6 @@ export default class Api {
       headers: this._headers,
     });
   }
-
-  _setHeaders() {
-    this._token = localStorage.getItem("token");
-    this._headers.authorization = `Bearer ${this._token}`;
-    return this._headers;
-  }
   
   getInitialCards() {
     return this._request(`${this._baseUrl}/cards`, {
@@ -38,7 +32,7 @@ export default class Api {
   
   addInfo(data) {
     return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._setHeaders(),
+      headers: this._headers,
       method: "PATCH",
       body: JSON.stringify({
         name: `${data.name}`,
@@ -49,7 +43,7 @@ export default class Api {
   
   createCard(data) {
     return this._request(`${this._baseUrl}/cards`, {
-      headers: this._setHeaders(),
+      headers: this._headers,
       method: "POST",
       body: JSON.stringify({
         name: data.title,
@@ -61,12 +55,12 @@ export default class Api {
   changeLikeCardStatus(id, isLiked) {
     if (isLiked) {
       return this._request(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._setHeaders(),
+        headers: this._headers,
           method: "PUT",
       });
     } else {
       return this._request(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._setHeaders(),
+        headers: this._headers,
         method: "DELETE",
       });
     }
@@ -74,19 +68,23 @@ export default class Api {
   
   deleteCard(id) {
     return this._request(`${this._baseUrl}/cards/${id}`, {
-      headers: this._setHeaders(),
+      headers: this._headers,
       method: "DELETE",
     });
   }
   
   addAvatar(data) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
-      headers: this._setHeaders(),
+      headers: this._headers,
       method: "PATCH",
       body: JSON.stringify({
         avatar: data.avatar,
       }),
     });
+  }
+
+  getToken() {
+    return this._headers.authorization = `Bearer ${localStorage.getItem('jwt')}`
   }
 }
 
@@ -94,6 +92,5 @@ export const api = new Api({
   baseUrl: BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json",
-  }
+  },
 });
