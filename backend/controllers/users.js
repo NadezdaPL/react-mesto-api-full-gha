@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+const { DEV_SECRET, NODE_PRODUCTION } = require('../config');
 
 const User = require('../models/user');
 const {
@@ -92,7 +93,7 @@ module.exports.login = (req, res) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === NODE_PRODUCTION ? JWT_SECRET : DEV_SECRET,
         { expiresIn: '7d' },
       );
       return res.send({ token });
