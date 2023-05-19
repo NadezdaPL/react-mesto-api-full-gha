@@ -95,14 +95,13 @@ module.exports.login = (req, res) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      return res.send({ token });
-      // res
-      //   .cookie('token', token, {
-      //     maxAge: 3600000,
-      //     httpOnly: true,
-      //     // sameSite: true,
-      //   })
-      //   .send({ token });
+      res
+        .cookie('token', token, {
+          maxAge: 3600000,
+          httpOnly: true,
+          // sameSite: true,
+        })
+        .send({ token });
     })
     .catch((err) => {
       res
