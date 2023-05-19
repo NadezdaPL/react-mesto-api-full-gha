@@ -5,13 +5,12 @@ const mongoose = require('mongoose');
 const errorCelebrate = require('celebrate').errors;
 const path = require('path');
 const helmet = require('helmet');
-const cors = require('cors');
 const router = require('./routes/index');
 const { ERROR_INTERNAL_SERVER } = require('./utils/constants');
 const errHandlers = require('./utils/handlers');
 const { PORT, MONGODB } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const cors = require('./middlewares/cors');
+const cors = require('./middlewares/cors');
 const limiter = require('./middlewares/rateLimit');
 
 const app = express();
@@ -25,16 +24,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-const corsOptions = {
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-};
-
-app.use(cors(corsOptions));
-
+app.use(cors);
 app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
