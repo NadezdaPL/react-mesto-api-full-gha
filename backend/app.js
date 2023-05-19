@@ -5,13 +5,12 @@ const mongoose = require('mongoose');
 const errorCelebrate = require('celebrate').errors;
 const path = require('path');
 const helmet = require('helmet');
-const corsAllowed = require('cors');
+const cors = require('cors');
 const router = require('./routes/index');
 const { ERROR_INTERNAL_SERVER } = require('./utils/constants');
 const errHandlers = require('./utils/handlers');
 const { PORT, MONGODB } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('./middlewares/cors');
 // const limiter = require('./middlewares/rateLimit');
 
 const app = express();
@@ -25,13 +24,25 @@ mongoose.connect(MONGODB, {
 //   }, 0);
 // });
 
+const allowedCors = [
+  'https://project-mesto.nomoredomains.monster',
+  'http://project-mesto.nomoredomains.monster',
+  'https://api.project-mesto.nomoredomains.monster/users/me',
+  'https://api.project-mesto.nomoredomains.monster/cards',
+  'https://api.project-mesto.nomoredomains.monster/signup',
+  'localhost:3000',
+  'localhost:3001',
+  'https://130.193.48.152',
+  'http://130.193.48.152',
+];
+
 const corsOptions = {
-  origin: cors,
+  origin: allowedCors,
   optionsSuccessStatus: 200,
   credentials: true,
 };
 
-app.use('*', corsAllowed(corsOptions));
+app.use('*', cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
