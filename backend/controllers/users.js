@@ -96,12 +96,12 @@ module.exports.login = (req, res) => {
         { expiresIn: '7d' },
       );
       return res.send({ token });
-        // .cookie('token', token, {
-        //   maxAge: 3600000,
-        //   httpOnly: true,
-        //   // sameSite: true,
-        // })
-        // .send({ token });
+      // .cookie('token', token, {
+      //   maxAge: 3600000,
+      //   httpOnly: true,
+      //   // sameSite: true,
+      // })
+      // .send({ token });
     })
     .catch((err) => {
       res

@@ -5,30 +5,37 @@ const mongoose = require('mongoose');
 const errorCelebrate = require('celebrate').errors;
 const path = require('path');
 const helmet = require('helmet');
+const corsAllowed = require('cors');
 const router = require('./routes/index');
 const { ERROR_INTERNAL_SERVER } = require('./utils/constants');
 const errHandlers = require('./utils/handlers');
 const { PORT, MONGODB } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
-const limiter = require('./middlewares/rateLimit');
+// const limiter = require('./middlewares/rateLimit');
 
 const app = express();
 mongoose.connect(MONGODB, {
   useNewUrlParser: true,
 });
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+// app.get('/crash-test', () => {
+//   setTimeout(() => {
+//     throw new Error('Сервер сейчас упадёт');
+//   }, 0);
+// });
 
-app.use(cors);
+const corsOptions = {
+  origin: cors,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+app.use('*', corsAllowed(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 app.use(requestLogger);
 app.use('/', router);
 app.use(errorLogger);
