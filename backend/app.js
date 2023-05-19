@@ -14,7 +14,10 @@ const cors = require('./middlewares/cors');
 const limiter = require('./middlewares/rateLimit');
 
 const app = express();
-mongoose.connect(MONGODB);
+mongoose.connect(MONGODB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.get('/crash-test', () => {
   setTimeout(() => {

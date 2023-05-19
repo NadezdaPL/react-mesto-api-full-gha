@@ -11,84 +11,98 @@ class Api {
     if (response.ok) {
       return response.json();
     }
-      return Promise.reject(response);
-    }
+    return Promise.reject(new Error(`Error: ${response.status}: ${response.statusText}`));
+  }
   
   _request(url, options) {
     return fetch(url, options).then(this._checkResponse)
   }
   
-  getInfo() {
-    return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-      credentials: "include",
-    });
-  }
-  
-  getInitialCards() {
+  getInitialCards(jwt) {
     return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
-      credentials: "include",
-    });
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+      }
+    })
   }
   
-  addInfo(data) {
+  addInfo(data, jwt) {
     return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+      },
       method: "PATCH",
-      credentials: "include",
       body: JSON.stringify({
         name: `${data.name}`,
         about: `${data.about}`,
       }),
-    });
+    })
   }
   
-  createCard(data) {
+  createCard(data, jwt) {
     return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+      },
       method: "POST",
-      credentials: "include",
       body: JSON.stringify({
         name: data.title,
         link: data.link,
       }),
-    });
+    })
   }
   
-  changeLikeCardStatus(id, isLiked) {
+  changeLikeCardStatus(id, isLiked, jwt) {
     if (isLiked) {
       return this._request(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._headers,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${jwt}`,
+        },
         method: "PUT",
-        credentials: "include",
       });
     } else {
       return this._request(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: this._headers,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${jwt}`,
+        },
         method: "DELETE",
-        credentials: "include",
-      });
+      })
     }
   }
   
-  deleteCard(id) {
+  deleteCard(id, jwt) {
     return this._request(`${this._baseUrl}/cards/${id}`, {
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+      },
       method: "DELETE",
-      credentials: "include",
-    });
+    })
   }
   
-  addAvatar(data) {
+  addAvatar(data, jwt) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+      },
       method: "PATCH",
-      credentials: "include",
       body: JSON.stringify({
         avatar: data.avatar,
       }),
-    });
+    })
+  }
+
+  getInfo() {
+    return this._request(`${this._baseUrl}/users/me`, {
+      credentials: "include",
+      headers: this._headers,
+    })
   }
 }
 
@@ -96,6 +110,6 @@ export const api = new Api({
   baseUrl: BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem('jwt')}`
+    "Authorization": `Bearer ${localStorage.getItem('jwt')}`
   },
 });

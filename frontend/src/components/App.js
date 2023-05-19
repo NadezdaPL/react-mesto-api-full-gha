@@ -70,8 +70,9 @@ function App() {
   };
 
   const handleCardDelete = (card) => {
+    const jwt = localStorage.getItem("jwt");
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, jwt)
       .then(() => {
         setCards((state) => state.filter((i) => i._id !== card._id));
       })
@@ -82,8 +83,9 @@ function App() {
 
   const handleUpdateUser = (data) => {
     setIsEditProfileChanging(true);
+    const jwt = localStorage.getItem('jwt');
     api
-      .addInfo(data)
+      .addInfo(data, jwt)
       .then((newData) => {
         setCurrentUser(newData);
       })
@@ -100,8 +102,9 @@ function App() {
 
   const handleUpdateAvatar = (data) => {
     setIsEditAvatarChanging(true);
+    const jwt = localStorage.getItem('jwt');
     api
-      .addAvatar(data)
+      .addAvatar(data, jwt)
       .then((newData) => {
         setCurrentUser(newData);
       })
@@ -118,8 +121,9 @@ function App() {
 
   const handleAddPlaceSubmit = (data) => {
     setIsAddPlaceChanging(true);
+    const jwt = localStorage.getItem('jwt');
     api
-      .createCard(data)
+      .createCard(data, jwt)
       .then((newData) => {
         setCards([newData, ...cards]);
       })
@@ -136,8 +140,9 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const jwt = localStorage.getItem('jwt');
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, !isLiked, jwt)
       .then((newCard) => {
         setCards((state) =>
           state.map((i) => (i._id === card._id ? newCard : i))
@@ -162,7 +167,7 @@ function App() {
       try {
         const data = await auth.authorize(info);
         if (data.token) {
-          localStorage.setItem("token", data.token);
+          localStorage.setItem("jwt", data.token);
           setLoggedIn(true);
           setEmail(info.email);
           navigate("/", { replace: true });
@@ -203,10 +208,10 @@ function App() {
   );
 
   const handleTokenCheck = useCallback(async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       try {
-        const user = await auth.checkToken(token);
+        const user = await auth.checkToken(jwt);
         if (!user) {
           throw new Error("Данные отсутствуют");
         }
@@ -226,7 +231,7 @@ function App() {
   const handleLogout = useCallback(() => {
     setLoggedIn(false);
     setEmail("");
-    localStorage.removeItem("token");
+    localStorage.removeItem("jwt");
     navigate("/sign-in", { replace: true });
   }, [navigate]);
 

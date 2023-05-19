@@ -4,40 +4,43 @@ function checkResponse(response) {
   if (response.ok) {
     return response.json();
   }
-    return Promise.reject(response);
-  }
+  return Promise.reject(new Error(`Error: ${response.status}: ${response.statusText}`));
+}
 
-export function register(data) {
+export function register({ email, password }) {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
     credentials: "include",
     headers: {
+      Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ "email": data.email, "password": data.password })
+    body: JSON.stringify({ email, password })
   }).then((response) => checkResponse(response));
 }
 
-export function authorize(data) {
+export function authorize({ email, password }) {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     credentials: "include",
     headers: {
+      Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ "email": data.email, "password": data.password })
+    body: JSON.stringify({ email, password })
   }).then((response) => checkResponse(response));
 }
 
-export const checkToken = (jwt) => {
+export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     credentials: "include",
     headers: {
+      Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    }
-  });
+      authorization: `Bearer ${token}`,
+    },
+  })
 }
 
 
