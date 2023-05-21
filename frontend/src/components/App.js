@@ -37,20 +37,54 @@ function App() {
   const [email, setEmail] = useState("");
   const [infoText, setInfoText] = useState("");
 
+  const handleTokenCheck = useCallback(async () => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      try {
+        const cards = await api.getInitialCards(jwt)
+        const user = await auth.checkToken(jwt)
+        console.log(user)
+        if (!user) {
+          throw new Error("Данные отсутствуют");
+        }
+        setLoggedIn(true);
+        setEmail(user.data.email);
+        navigate("/");
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsCardsLoading(false);
+      }
+    } else {
+      setIsCardsLoading(false);
+    }
+  }, [navigate]);
+
+
   useEffect(() => {
-    loggedIn &&
-      Promise.all([api.getInfo(), api.getInitialCards()])
-        .then(([userData, cardsData]) => {
-          setCurrentUser(userData);
-          setCards(cardsData);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setIsCardsLoading(false);
-        });
-  }, [loggedIn]);
+    handleTokenCheck();
+  }, []);
+
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem('jwt');
+  //   if(jwt) {
+      
+  //     loggedIn &&
+  //       Promise.all([api.getInfo(), api.getInitialCards()])
+  //         .then(([userData, cardsData]) => {
+  //           setCurrentUser(userData);
+  //           setCards(cardsData);
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         })
+  //         .finally(() => {
+  //           setIsCardsLoading(false);
+  //         });
+  //   } else {
+  //     console.error('Нет токена')
+  //   }
+  // }, [loggedIn]);
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -207,26 +241,7 @@ function App() {
     [navigate]
   );
 
-  const handleTokenCheck = useCallback(async () => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      try {
-        const user = await auth.checkToken(jwt);
-        if (!user) {
-          throw new Error("Данные отсутствуют");
-        }
-        setLoggedIn(true);
-        setEmail(user.data.email);
-        navigate("/");
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsCardsLoading(false);
-      }
-    } else {
-      setIsCardsLoading(false);
-    }
-  }, [navigate]);
+
 
   const handleLogout = useCallback(() => {
     setLoggedIn(false);
@@ -235,9 +250,7 @@ function App() {
     navigate("/sign-in", { replace: true });
   }, [navigate]);
 
-  useEffect(() => {
-    handleTokenCheck();
-  }, [handleTokenCheck]);
+
 
   return (
     <div className="App">

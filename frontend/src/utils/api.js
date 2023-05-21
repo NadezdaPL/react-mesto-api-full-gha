@@ -98,12 +98,16 @@ class Api {
     })
   }
 
-  getInfo() {
+  getInfo(jwt) {
     return this._request(`${this._baseUrl}/users/me`, {
       credentials: "include",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+      },
     })
   }
+
 }
 
 export const api = new Api({

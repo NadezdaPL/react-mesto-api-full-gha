@@ -4,8 +4,10 @@ const allowedCors = [
   'https://api.project-mesto.nomoredomains.monster/users/me',
   'https://api.project-mesto.nomoredomains.monster/cards',
   'https://api.project-mesto.nomoredomains.monster/signup',
-  'localhost:3000',
+  'http://localhost:3000',
+  'http://localhost:3001',
   'localhost:3001',
+  // 'http://localhost:4000',
   'https://130.193.48.152',
   'http://130.193.48.152',
 ];

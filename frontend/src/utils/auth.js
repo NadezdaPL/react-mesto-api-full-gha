@@ -1,4 +1,6 @@
-export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
+// export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
+export const BASE_URL = "http://localhost:4000";
+
 
 function checkResponse(response) {
   if (response.ok) {
@@ -33,12 +35,10 @@ export function authorize({ email, password }) {
 
 export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
     credentials: "include",
     headers: {
-      Accept: "application/json",
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 }
