@@ -41,14 +41,19 @@ function App() {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       try {
+        const user = await api.getInfo(jwt)
         const cards = await api.getInitialCards(jwt)
-        const user = await auth.checkToken(jwt)
         console.log(user)
+        console.log(cards)
+
         if (!user) {
           throw new Error("Данные отсутствуют");
         }
+        setCurrentUser(user);
+        setCards(cards.data);
+        debugger
         setLoggedIn(true);
-        setEmail(user.data.email);
+        setEmail(user.email);
         navigate("/");
       } catch (e) {
         console.error(e);
@@ -174,13 +179,16 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
     const jwt = localStorage.getItem('jwt');
     api
       .changeLikeCardStatus(card._id, !isLiked, jwt)
       .then((newCard) => {
-        setCards((state) =>
-          state.map((i) => (i._id === card._id ? newCard : i))
-        );
+        const newCards = cards.map(c => (c._id === card._id ? newCard : c));
+        // console.log(newCards)
+        // debugger
+        setCards(newCards);
+
       })
       .catch((error) => {
         console.log(error);
