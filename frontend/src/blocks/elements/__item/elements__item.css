@@ -4,5 +4,4 @@
   max-height: 282px;
   border-radius: 10px;
   object-fit: cover;
-  transform: matrix(-1, 0, 0, 1, 0, 0);
 }

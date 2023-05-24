@@ -43,15 +43,12 @@ function App() {
       try {
         const user = await api.getInfo(jwt)
         const cards = await api.getInitialCards(jwt)
-        console.log(user)
-        console.log(cards)
 
         if (!user) {
           throw new Error("Данные отсутствуют");
         }
         setCurrentUser(user);
         setCards(cards.data);
-        debugger
         setLoggedIn(true);
         setEmail(user.email);
         navigate("/");
@@ -69,27 +66,6 @@ function App() {
   useEffect(() => {
     handleTokenCheck();
   }, []);
-
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem('jwt');
-  //   if(jwt) {
-      
-  //     loggedIn &&
-  //       Promise.all([api.getInfo(), api.getInitialCards()])
-  //         .then(([userData, cardsData]) => {
-  //           setCurrentUser(userData);
-  //           setCards(cardsData);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         })
-  //         .finally(() => {
-  //           setIsCardsLoading(false);
-  //         });
-  //   } else {
-  //     console.error('Нет токена')
-  //   }
-  // }, [loggedIn]);
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -126,7 +102,7 @@ function App() {
     api
       .addInfo(data, jwt)
       .then((newData) => {
-        setCurrentUser(newData);
+        setCurrentUser(newData.data);
       })
       .then(() => {
         closeAllPopups();
@@ -145,7 +121,7 @@ function App() {
     api
       .addAvatar(data, jwt)
       .then((newData) => {
-        setCurrentUser(newData);
+        setCurrentUser(newData.data);
       })
       .then(() => {
         closeAllPopups();
@@ -164,7 +140,7 @@ function App() {
     api
       .createCard(data, jwt)
       .then((newData) => {
-        setCards([newData, ...cards]);
+        setCards([newData.data, ...cards]);
       })
       .then(() => {
         closeAllPopups();
@@ -184,9 +160,7 @@ function App() {
     api
       .changeLikeCardStatus(card._id, !isLiked, jwt)
       .then((newCard) => {
-        const newCards = cards.map(c => (c._id === card._id ? newCard : c));
-        // console.log(newCards)
-        // debugger
+        const newCards = cards.map(c => (c._id === card._id ? newCard.data : c));
         setCards(newCards);
 
       })
@@ -213,6 +187,7 @@ function App() {
           setLoggedIn(true);
           setEmail(info.email);
           navigate("/", { replace: true });
+          handleTokenCheck();
         }
       } catch (e) {
         console.error(e);
@@ -249,16 +224,12 @@ function App() {
     [navigate]
   );
 
-
-
   const handleLogout = useCallback(() => {
     setLoggedIn(false);
     setEmail("");
     localStorage.removeItem("jwt");
     navigate("/sign-in", { replace: true });
   }, [navigate]);
-
-
 
   return (
     <div className="App">

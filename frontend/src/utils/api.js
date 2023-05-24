@@ -100,7 +100,6 @@ class Api {
 
   getInfo(jwt) {
     return this._request(`${this._baseUrl}/users/me`, {
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${jwt}`,
