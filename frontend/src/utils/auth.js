@@ -1,6 +1,4 @@
-// export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
-export const BASE_URL = "http://localhost:4000";
-
+export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
 
 function checkResponse(response) {
   if (response.ok) {
@@ -39,6 +37,3 @@ export const checkToken = (token) => {
     },
   })
 }
-
-
-// export const BASE_URL = "https://api.project-mesto.nomoredomains.monster";
