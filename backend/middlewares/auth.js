@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, NODE_ENV === NODE_PRODUCTION ? JWT_SECRET : DEV_SECRET);
   } catch (err) {
-    next(new Unauthorized('Необходимо пройти авторизацию'));
+    return next(new Unauthorized('Необходимо пройти авторизацию'));
   }
 
   req.user = payload;

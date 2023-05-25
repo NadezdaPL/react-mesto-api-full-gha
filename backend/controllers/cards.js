@@ -7,13 +7,13 @@ const {
   ERROR_NOT_FOUND,
 } = require('../utils/constants');
 
-const checkCard = (card, res) => {
+const checkCard = (card, res, next) => {
   if (card) {
     return res.send({ data: card });
   }
-  return res
-    .status(ERROR_NOT_FOUND)
-    .send({ message: `Карточка с указанным _id не найдена ${ERROR_NOT_FOUND}` });
+
+  const error = new NotFound(`Карточка с указанным _id не найдена ${ERROR_NOT_FOUND}`);
+  return next(error);
 };
 
 module.exports.getCards = (req, res, next) => {
@@ -51,7 +51,7 @@ module.exports.deleteCards = (req, res, next) => {
       if (card.owner._id.toString() !== req.user._id.toString()) {
         throw new Forbidden('Вы не можете удалить карточку другого пользователя');
       }
-      Card.findByIdAndDelete({ _id })
+      return Card.deleteOne()
         .populate([
           { path: 'owner', model: 'user' },
         ])

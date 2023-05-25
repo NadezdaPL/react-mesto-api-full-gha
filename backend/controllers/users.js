@@ -8,17 +8,15 @@ const User = require('../models/user');
 const {
   CODE,
   CODE_CREATED,
-  ERROR_NOT_FOUND,
-  ERROR_UNAUTHORIZED,
 } = require('../utils/constants');
+const NotFound = require('../Error/NotFound');
 
-const checkUser = (user, res) => {
+const checkUser = (user, res, next) => {
   if (user) {
     return res.send({ data: user });
   }
-  return res
-    .status(ERROR_NOT_FOUND)
-    .send({ message: 'Пользователь по указанному _id не найден' });
+  const error = new NotFound('Пользователь по указанному _id не найден');
+  return next(error);
 };
 
 module.exports.getUsers = (req, res, next) => {
@@ -87,7 +85,7 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -98,9 +96,5 @@ module.exports.login = (req, res) => {
       );
       return res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(ERROR_UNAUTHORIZED)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };
