@@ -29,7 +29,12 @@ module.exports.getId = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .then((user) => checkUser(user, res))
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Пользователь не найден');
+      }
+      checkUser(user, res);
+    })
     .catch((error) => {
       next(error);
     });
