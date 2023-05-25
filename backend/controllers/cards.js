@@ -68,7 +68,12 @@ const updateLikes = (req, res, updateData, next) => {
       { path: 'owner', model: 'user' },
       { path: 'likes', model: 'user' },
     ])
-    .then((user) => checkCard(user, res))
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Карточка не найдена');
+      }
+      checkCard(user, res);
+    })
     .catch(next);
 };
 
