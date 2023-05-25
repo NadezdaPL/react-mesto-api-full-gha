@@ -51,7 +51,7 @@ module.exports.deleteCards = (req, res, next) => {
       if (card.owner._id.toString() !== req.user._id.toString()) {
         throw new Forbidden('Вы не можете удалить карточку другого пользователя');
       }
-      return Card.deleteOne()
+      return Card.deleteOne({ _id })
         .populate([
           { path: 'owner', model: 'user' },
         ])
