@@ -12,6 +12,6 @@ Frontend: React
 
 Backend: NodeJS, Postman, Express, MongoDB  
 
-## Визуальная составляющая проекта
+## Ссылки
 
 Ссылка на проект - https://nadezdapl.github.io/mesto/  
